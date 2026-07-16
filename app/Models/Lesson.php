@@ -10,7 +10,7 @@ class Lesson extends Model
 {
     use LogsActivity;
 
-    protected $fillable = ['course_id', 'title', 'content', 'video_url', 'position', 'duration_minutes'];
+    protected $fillable = ['course_id', 'title', 'content', 'video_url', 'attachment_path', 'position', 'duration_minutes'];
 
     public function course(): BelongsTo
     {

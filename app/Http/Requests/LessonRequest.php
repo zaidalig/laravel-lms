@@ -17,6 +17,7 @@ class LessonRequest extends FormRequest
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'video_url' => 'nullable|url|max:255',
+            'attachment' => 'nullable|file|mimes:pdf|max:10240',
             'position' => 'required|integer|min:1|max:1000',
             'duration_minutes' => 'required|integer|min:1|max:1000',
         ];

@@ -5,12 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LessonRequest;
 use App\Models\Course;
 use App\Models\Lesson;
+use Illuminate\Support\Facades\Storage;
 
 class LessonController extends Controller
 {
     public function store(LessonRequest $request, Course $course)
     {
-        $course->lessons()->create($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('attachment')) {
+            $data['attachment_path'] = $request->file('attachment')->store('lesson-attachments', 'public');
+        }
+
+        $course->lessons()->create($data);
 
         return redirect()->route('courses.show', $course)->with('success', 'Lesson added.');
     }
@@ -24,7 +31,16 @@ class LessonController extends Controller
 
     public function update(LessonRequest $request, Lesson $lesson)
     {
-        $lesson->update($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('attachment')) {
+            if ($lesson->attachment_path) {
+                Storage::disk('public')->delete($lesson->attachment_path);
+            }
+            $data['attachment_path'] = $request->file('attachment')->store('lesson-attachments', 'public');
+        }
+
+        $lesson->update($data);
 
         return redirect()->route('courses.show', $lesson->course)->with('success', 'Lesson updated.');
     }
@@ -32,6 +48,11 @@ class LessonController extends Controller
     public function destroy(Lesson $lesson)
     {
         $course = $lesson->course;
+
+        if ($lesson->attachment_path) {
+            Storage::disk('public')->delete($lesson->attachment_path);
+        }
+
         $lesson->delete();
 
         return redirect()->route('courses.show', $course)->with('success', 'Lesson deleted.');
