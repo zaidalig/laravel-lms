@@ -42,6 +42,21 @@
 <button class="btn btn-primary">Add Lesson</button>
 </form>
 </div></div>
+<div class="card card-table border-0 mt-4"><div class="card-header bg-white fw-bold">Quizzes ({{ $course->quizzes->count() }})</div><div class="table-responsive"><table class="table mb-0"><thead class="table-light"><tr><th>Title</th><th>Questions</th><th>Pass Score</th><th class="text-end">Actions</th></tr></thead><tbody>
+@forelse($course->quizzes as $quiz)
+<tr><td class="fw-semibold">{{ $quiz->title }}</td><td>{{ $quiz->questions->count() }}</td><td>{{ $quiz->pass_score ?? 70 }}%</td>
+<td class="text-end"><a href="{{ route('quizzes.edit',$quiz) }}" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen"></i></a> <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="{{ route('quizzes.destroy',$quiz) }}" data-name="{{ $quiz->title }}"><i class="fa-solid fa-trash"></i></button></td></tr>
+@empty<tr><td colspan="4" class="text-center py-4 text-muted">No quizzes yet. Add one below.</td></tr>@endforelse
+</tbody></table></div></div>
+<div class="card border-0 shadow-sm mt-4"><div class="card-header bg-white fw-bold">Add Quiz</div><div class="card-body">
+<form method="POST" action="{{ route('quizzes.store',$course) }}">@csrf
+<div class="row">
+<div class="col-md-8 mb-3"><label class="form-label">Title</label><input name="title" class="form-control @error('title') is-invalid @enderror" value="{{ old('title') }}" required>@error('title')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
+<div class="col-md-4 mb-3"><label class="form-label">Pass Score % <span class="text-muted small">(optional)</span></label><input type="number" min="0" max="100" name="pass_score" class="form-control @error('pass_score') is-invalid @enderror" value="{{ old('pass_score') }}" placeholder="Default 70">@error('pass_score')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
+</div>
+<button class="btn btn-primary">Add Quiz</button>
+</form>
+</div></div>
 </div>
 <div class="col-lg-5">
 <div class="card card-table border-0"><div class="card-header bg-white fw-bold">Enrolled Students ({{ $course->enrollments_count }})</div><div class="table-responsive"><table class="table mb-0"><thead class="table-light"><tr><th>Student</th><th>Enrolled</th><th>Status</th><th>Progress</th></tr></thead><tbody>

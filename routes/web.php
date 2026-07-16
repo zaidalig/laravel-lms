@@ -9,6 +9,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\MyLearningController;
 use App\Http\Controllers\PublicCourseController;
+use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizQuestionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +33,8 @@ Route::middleware(['auth', 'active.user'])->group(function () {
     Route::get('/my/courses', [MyLearningController::class, 'index'])->name('my.courses');
     Route::get('/my/courses/{enrollment}', [MyLearningController::class, 'show'])->name('my.courses.show');
     Route::post('/my/courses/{enrollment}/lessons/{lesson}/complete', [MyLearningController::class, 'complete'])->name('my.lessons.complete');
+    Route::get('/my/courses/{enrollment}/quizzes/{quiz}', [MyLearningController::class, 'quiz'])->name('my.quizzes.show');
+    Route::post('/my/courses/{enrollment}/quizzes/{quiz}/submit', [MyLearningController::class, 'submitQuiz'])->name('my.quizzes.submit');
 
     Route::middleware('can:manage-courses')->prefix('admin')->group(function () {
         Route::resource('categories', CourseCategoryController::class)->except(['show'])->parameters(['categories' => 'category']);
@@ -40,6 +44,12 @@ Route::middleware(['auth', 'active.user'])->group(function () {
         Route::get('lessons/{lesson}/edit', [LessonController::class, 'edit'])->name('lessons.edit');
         Route::put('lessons/{lesson}', [LessonController::class, 'update'])->name('lessons.update');
         Route::delete('lessons/{lesson}', [LessonController::class, 'destroy'])->name('lessons.destroy');
+        Route::post('courses/{course}/quizzes', [QuizController::class, 'store'])->name('quizzes.store');
+        Route::get('quizzes/{quiz}/edit', [QuizController::class, 'edit'])->name('quizzes.edit');
+        Route::put('quizzes/{quiz}', [QuizController::class, 'update'])->name('quizzes.update');
+        Route::delete('quizzes/{quiz}', [QuizController::class, 'destroy'])->name('quizzes.destroy');
+        Route::post('quizzes/{quiz}/questions', [QuizQuestionController::class, 'store'])->name('quiz-questions.store');
+        Route::delete('quiz-questions/{question}', [QuizQuestionController::class, 'destroy'])->name('quiz-questions.destroy');
         Route::get('activity-logs', [ActivityLogController::class, 'index'])->name('activity.index');
     });
 

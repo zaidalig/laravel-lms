@@ -55,7 +55,7 @@ class CourseController extends Controller
 
     public function show(Course $course)
     {
-        $course->load(['category', 'instructor', 'lessons'])->loadCount('enrollments');
+        $course->load(['category', 'instructor', 'lessons', 'quizzes.questions'])->loadCount('enrollments');
         $enrollments = $course->enrollments()->with('user')->latest()->limit(10)->get();
 
         return view('courses.show', compact('course', 'enrollments'));
