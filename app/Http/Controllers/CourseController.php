@@ -61,6 +61,34 @@ class CourseController extends Controller
         return view('courses.show', compact('course', 'enrollments'));
     }
 
+    public function progressExport(Course $course)
+    {
+        $course->loadCount('lessons');
+        $enrollments = $course->enrollments()->with('user')->withCount('completions')->orderBy('id')->get();
+
+        return response()->streamDownload(function () use ($course, $enrollments) {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, ['Student', 'Email', 'Enrolled At', 'Lessons Completed', 'Total Lessons', 'Progress %', 'Status'], ',', '"', '');
+
+            foreach ($enrollments as $e) {
+                $total = $course->lessons_count;
+                $percent = $total > 0 ? (int) round($e->completions_count / $total * 100) : 0;
+
+                fputcsv($handle, [
+                    $e->user?->name ?? '-',
+                    $e->user?->email ?? '-',
+                    $e->enrolled_at->format('Y-m-d'),
+                    $e->completions_count,
+                    $total,
+                    $percent,
+                    ucfirst($e->status),
+                ], ',', '"', '');
+            }
+
+            fclose($handle);
+        }, "{$course->slug}-progress.csv", ['Content-Type' => 'text/csv']);
+    }
+
     public function edit(Course $course)
     {
         return view('courses.edit', ['course' => $course] + $this->formOptions());

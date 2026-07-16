@@ -16,6 +16,7 @@
 </div>
 <div class="d-flex gap-2">
 @if($course->isPublished())<a href="{{ route('public.courses.show',$course->slug) }}" class="btn btn-outline-secondary rounded-pill">View Public Page</a>@endif
+<a href="{{ route('courses.progress-export',$course) }}" class="btn btn-outline-success rounded-pill"><i class="fa-solid fa-file-csv me-1"></i>Export Progress (CSV)</a>
 <a href="{{ route('courses.edit',$course) }}" class="btn btn-primary rounded-pill">Edit</a>
 </div>
 </div>
