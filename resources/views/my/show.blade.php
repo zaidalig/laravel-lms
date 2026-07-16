@@ -30,7 +30,7 @@
 <h5 class="fw-bold mb-0">{{ $current->title }}</h5>
 <span class="text-muted small"><i class="fa-regular fa-clock me-1"></i>{{ $current->duration_minutes }} min</span>
 </div>
-@if($current->video_url || $current->attachment_path)<p class="d-flex gap-2">@if($current->video_url)<a href="{{ $current->video_url }}" target="_blank" rel="noopener" class="btn btn-outline-primary btn-sm rounded-pill"><i class="fa-solid fa-video me-1"></i>Watch Video</a>@endif @if($current->attachment_path)<a href="{{ Storage::url($current->attachment_path) }}" target="_blank" class="btn btn-outline-danger btn-sm rounded-pill"><i class="fa-solid fa-file-pdf me-1"></i>Download PDF</a>@endif</p>@endif
+@if($current->video_url || $current->attachment_path)<p class="d-flex gap-2">@if($current->video_url)<a href="{{ $current->video_url }}" target="_blank" rel="noopener" class="btn btn-outline-primary btn-sm rounded-pill"><i class="fa-solid fa-video me-1"></i>Watch Video</a>@endif @if($current->attachment_path)<a href="{{ media_url($current->attachment_path) }}" target="_blank" class="btn btn-outline-danger btn-sm rounded-pill"><i class="fa-solid fa-file-pdf me-1"></i>Download PDF</a>@endif</p>@endif
 <p class="mb-4" style="white-space: pre-line;">{{ $current->content }}</p>
 @if(in_array($current->id, $completedIds))
 <span class="badge bg-success-subtle text-success px-3 py-2"><i class="fa-solid fa-circle-check me-1"></i>Completed</span>

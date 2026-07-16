@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LessonRequest;
 use App\Models\Course;
 use App\Models\Lesson;
+use App\Services\MediaStorage;
 use Illuminate\Support\Facades\Storage;
 
 class LessonController extends Controller
@@ -14,7 +15,7 @@ class LessonController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('attachment')) {
-            $data['attachment_path'] = $request->file('attachment')->store('lesson-attachments', 'public');
+            $data['attachment_path'] = MediaStorage::store($request->file('attachment'), 'lesson-attachments');
         }
 
         $course->lessons()->create($data);
@@ -35,9 +36,9 @@ class LessonController extends Controller
 
         if ($request->hasFile('attachment')) {
             if ($lesson->attachment_path) {
-                Storage::disk('public')->delete($lesson->attachment_path);
+                MediaStorage::delete($lesson->attachment_path);
             }
-            $data['attachment_path'] = $request->file('attachment')->store('lesson-attachments', 'public');
+            $data['attachment_path'] = MediaStorage::store($request->file('attachment'), 'lesson-attachments');
         }
 
         $lesson->update($data);
@@ -50,7 +51,7 @@ class LessonController extends Controller
         $course = $lesson->course;
 
         if ($lesson->attachment_path) {
-            Storage::disk('public')->delete($lesson->attachment_path);
+            MediaStorage::delete($lesson->attachment_path);
         }
 
         $lesson->delete();
