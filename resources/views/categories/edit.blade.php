@@ -1,0 +1,2 @@
+@extends('layouts.app')@section('title','Edit Category')@section('page_title','Edit Category')
+@section('content')<div class="card p-4 border-0 shadow-sm"><form method="POST" action="{{ route('categories.update',$category) }}">@csrf @method('PUT') @include('categories._form')<button class="btn btn-primary">Update</button> <a href="{{ route('categories.index') }}" class="btn btn-light">Cancel</a></form></div>@endsection

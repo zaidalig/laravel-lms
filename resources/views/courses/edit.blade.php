@@ -1,0 +1,2 @@
+@extends('layouts.app')@section('title','Edit Course')@section('page_title','Edit Course')
+@section('content')<div class="card p-4 border-0 shadow-sm"><form method="POST" action="{{ route('courses.update',$course) }}">@csrf @method('PUT') @include('courses._form')<button class="btn btn-primary">Update</button> <a href="{{ route('courses.show',$course) }}" class="btn btn-light">Cancel</a></form></div>@endsection
