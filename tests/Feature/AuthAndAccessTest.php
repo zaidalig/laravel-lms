@@ -84,4 +84,26 @@ class AuthAndAccessTest extends TestCase
             'status' => 'active',
         ]);
     }
+
+    public function test_owner_can_download_progress_export(): void
+    {
+        $owner = $this->makeUser('owner', 'export-owner@test.local');
+        $course = $this->makeCourse();
+
+        $response = $this->actingAs($owner)->get("/admin/courses/{$course->id}/progress-export");
+
+        $response->assertOk();
+        $this->assertStringStartsWith('text/csv', $response->headers->get('content-type'));
+        $response->assertDownload("{$course->slug}-progress.csv");
+    }
+
+    public function test_student_cannot_download_progress_export(): void
+    {
+        $student = $this->makeUser('student', 'export-student@test.local');
+        $course = $this->makeCourse();
+
+        $this->actingAs($student)
+            ->get("/admin/courses/{$course->id}/progress-export")
+            ->assertForbidden();
+    }
 }
