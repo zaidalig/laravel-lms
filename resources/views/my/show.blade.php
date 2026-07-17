@@ -22,6 +22,17 @@
 </li>
 @empty<li class="list-group-item text-center text-muted py-4">No lessons in this course yet.</li>@endforelse
 </ul></div>
+@if($quizzes->isNotEmpty())
+<div class="card border-0 shadow-sm mt-4"><div class="card-header bg-white fw-bold">Quizzes</div>
+<ul class="list-group list-group-flush">
+@foreach($quizzes as $quiz)
+<li class="list-group-item d-flex justify-content-between align-items-center">
+<a href="{{ route('my.quizzes.show', ['enrollment' => $enrollment, 'quiz' => $quiz]) }}" class="text-decoration-none text-reset flex-grow-1">{{ $quiz->title }}</a>
+@if(isset($attemptsByQuiz[$quiz->id]))<span class="badge {{ $attemptsByQuiz[$quiz->id]->passed ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning' }}">{{ $attemptsByQuiz[$quiz->id]->score }}%</span>@else<span class="text-muted small">Take quiz</span>@endif
+</li>
+@endforeach
+</ul></div>
+@endif
 </div>
 <div class="col-lg-8">
 @if($current)

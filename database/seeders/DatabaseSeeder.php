@@ -7,6 +7,8 @@ use App\Models\CourseCategory;
 use App\Models\Enrollment;
 use App\Models\Lesson;
 use App\Models\LessonCompletion;
+use App\Models\Quiz;
+use App\Models\QuizQuestion;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -69,6 +71,32 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+
+        $quiz = Quiz::create([
+            'course_id' => 1,
+            'title' => 'Laravel Basics Check',
+            'pass_score' => 70,
+        ]);
+
+        QuizQuestion::create([
+            'quiz_id' => $quiz->id,
+            'question' => 'Which command creates a new Laravel project?',
+            'option_a' => 'composer create-project laravel/laravel',
+            'option_b' => 'npm init laravel',
+            'option_c' => 'php artisan new',
+            'option_d' => 'laravel install',
+            'correct_option' => 'a',
+        ]);
+
+        QuizQuestion::create([
+            'quiz_id' => $quiz->id,
+            'question' => 'What does Eloquent provide in Laravel?',
+            'option_a' => 'Routing',
+            'option_b' => 'ORM for database models',
+            'option_c' => 'Asset compilation',
+            'option_d' => 'Email delivery',
+            'correct_option' => 'b',
+        ]);
 
         // student@example.com: one course ~50% complete, one just started
         $e1 = Enrollment::create(['course_id' => 1, 'user_id' => 3, 'enrolled_at' => today()->subDays(14), 'status' => 'active']);

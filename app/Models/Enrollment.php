@@ -35,6 +35,11 @@ class Enrollment extends Model
         return $this->hasMany(LessonCompletion::class);
     }
 
+    public function quizAttempts(): HasMany
+    {
+        return $this->hasMany(QuizAttempt::class);
+    }
+
     public function progressPercent(): int
     {
         $total = $this->course->lessons()->count();
