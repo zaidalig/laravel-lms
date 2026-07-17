@@ -21,7 +21,8 @@ class CourseCategoryController extends Controller
             $query->where('status', $request->input('status'));
         }
 
-        $categories = $query->latest()->paginate(10)->withQueryString();
+        [$perPage, $sort, $direction] = $this->listQueryParams($request, ['name', 'created_at'], 'created_at');
+        $categories = $query->orderBy($sort, $direction)->paginate($perPage)->withQueryString();
 
         return view('categories.index', compact('categories'));
     }
